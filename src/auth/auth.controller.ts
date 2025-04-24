@@ -6,11 +6,14 @@ import { SendOtpDto } from './dto/send-otp.dto';
 import { generateOTP } from 'src/utils/otp.util';
 import { Redis } from 'ioredis';
 import { VerifyOtpDto } from './dto/verify-otp.dto';
+import { MailerService } from 'src/mailer/mailer.service';
+import { ForgetPasswordDto } from './dto/forget-password.dto';
 
 @Controller('users/api/v1')
 export class AuthController {
   constructor(private authService: AuthService,
-  @Inject('REDIS_CLIENT') private readonly redis: Redis
+  @Inject('REDIS_CLIENT') private readonly redis: Redis,
+  private readonly mailerService: MailerService,
   ) {}
 
   @Post('signup')
@@ -28,9 +31,9 @@ export class AuthController {
   const otp = generateOTP();
   await this.redis.set(`otp:${dto.email}`, otp, 'EX', 300); // expires in 5 minutes
 
-  console.log(`OTP for ${dto.email}: ${otp}`);
+  await this.mailerService.sendOtpEmail(dto.email, otp);
 
-  return { message: 'OTP sent to email (check logs)' };
+  return { message: 'OTP sent to email' };
 }
 
 @Post('verify-otp')
@@ -47,6 +50,21 @@ async verifyOtp(@Body() dto: VerifyOtpDto) {
 
   await this.redis.del(`otp:${dto.email}`);
   return { success: true, message: 'OTP verified successfully' };
+}
+
+@Post('forget-password')
+async forgetPassword(@Body() dto: ForgetPasswordDto) {
+  const user = await this.authService.findByEmail(dto.email);
+  if (!user) return { message: 'Email not found' };
+
+  const otp = generateOTP();
+  await this.redis.set(`otp:${dto.email}`, otp, 'EX', 300);
+
+  await this.mailerService.sendPasswordResetEmail(dto.email, otp);
+
+  //console.log(`📩 Password Reset OTP for ${dto.email}: ${otp}`);
+
+  return { message: 'OTP sent to email' };
 }
 
 }

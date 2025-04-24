@@ -6,10 +6,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../users/user.model';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([User]),
+    MailerModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({

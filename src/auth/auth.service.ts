@@ -8,9 +8,7 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
-//   findByEmail(email: string) {
-//     throw new Error('Method not implemented.');
-//   }
+ 
   constructor(
     @InjectModel(User) private userModel: typeof User,
     private jwtService: JwtService,
@@ -23,6 +21,7 @@ export class AuthService {
         isVerified: false,
         profilePic: ''
     });
+
     return { message: 'User registered successfully', user };
   }
 
