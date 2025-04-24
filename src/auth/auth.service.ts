@@ -8,6 +8,9 @@ import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
+//   findByEmail(email: string) {
+//     throw new Error('Method not implemented.');
+//   }
   constructor(
     @InjectModel(User) private userModel: typeof User,
     private jwtService: JwtService,
@@ -32,4 +35,11 @@ export class AuthService {
     const token = this.jwtService.sign({ sub: user.id, email: user.email });
     return { access_token: token };
   }
+
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.userModel.findOne({ where: { email } });
+  }
+  
+
+  
 }
