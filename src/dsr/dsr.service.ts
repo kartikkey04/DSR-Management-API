@@ -13,11 +13,9 @@ export class DsrService {
     private readonly dsrModel: typeof Dsr,
   ) {}
 
-  // Create DSR (Daily Status Report)
   async createDsr(createDsrDto: CreateDsrDto, userId: number): Promise<Dsr> {
     const { content, hours, date } = createDsrDto;
 
-    // Check if the user already has a DSR for this date with more than 8 hours
     const existingDsr = await this.dsrModel.findOne({
         where: {
           userId,
@@ -28,7 +26,7 @@ export class DsrService {
       if (existingDsr) {
         throw new Error('You cannot add more than 8 hours of work for the same day.');
       }
-    // Perform validation to ensure hours do not exceed 8 per day
+
     if (hours > 8) {
       throw new Error('Cannot log more than 8 hours in a day');
     }
@@ -44,25 +42,22 @@ export class DsrService {
   }
 
   async updateDsr(userId: number, dsrId: number, updateDsrDto: UpdateDsrDto): Promise<Dsr> {
-    // Find the DSR by ID
+
     const dsr = await this.dsrModel.findOne({ where: { id: dsrId } });
 
     if (!dsr) {
       throw new NotFoundException('DSR not found');
     }
 
-    // Check if the user is the one who created the DSR
     if (dsr.userId !== userId) {
       throw new ForbiddenException('You are not allowed to update this DSR');
     }
 
-    // Check if the total hours exceed the limit (8 hours)
     const newHours = updateDsrDto.hours ? updateDsrDto.hours : dsr.hours;
     if (newHours > 8) {
       throw new ForbiddenException('You cannot add more than 8 hours for a day');
     }
 
-    // Update the DSR
     await dsr.update(updateDsrDto);
 
     return dsr;

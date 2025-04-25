@@ -1,4 +1,3 @@
-// src/dsr/models/dsr.model.ts
 import { Column, Model, Table, ForeignKey } from 'sequelize-typescript';
 import { User } from 'src/users/user.model';  
 

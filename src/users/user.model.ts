@@ -10,8 +10,8 @@ import {
   
   @Table({ tableName: 'users' })
   export class User extends Model<
-    InferAttributes<User>, // All attributes (for querying)
-    InferCreationAttributes<User> // Creation-only attributes
+    InferAttributes<User>, 
+    InferCreationAttributes<User> 
   > {
     @PrimaryKey
     @Default(DataType.UUIDV4)

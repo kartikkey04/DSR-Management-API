@@ -80,8 +80,6 @@ async forgetPassword(@Body() dto: ForgetPasswordDto) {
 
   await this.mailerService.sendPasswordResetEmail(dto.email, otp);
 
-  //console.log(`📩 Password Reset OTP for ${dto.email}: ${otp}`);
-
   return { message: 'OTP sent to email' };
 }
 
