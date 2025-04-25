@@ -17,6 +17,17 @@ export class DsrService {
   async createDsr(createDsrDto: CreateDsrDto, userId: number): Promise<Dsr> {
     const { content, hours, date } = createDsrDto;
 
+    // Check if the user already has a DSR for this date with more than 8 hours
+    const existingDsr = await this.dsrModel.findOne({
+        where: {
+          userId,
+          date,
+        },
+      });
+  
+      if (existingDsr) {
+        throw new Error('You cannot add more than 8 hours of work for the same day.');
+      }
     // Perform validation to ensure hours do not exceed 8 per day
     if (hours > 8) {
       throw new Error('Cannot log more than 8 hours in a day');
