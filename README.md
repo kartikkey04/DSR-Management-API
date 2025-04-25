@@ -135,6 +135,7 @@ npm run start:dev</code></pre>
 
   <h2>📄 License</h2>
   <p>This project is licensed under the MIT License.</p>
+  <img src="/home/user/Developers/nest-dsr-api/Screenshot from 2025-04-25 13-16-47.png">
 
 </body>
 </html>
