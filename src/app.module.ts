@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { RedisModule } from './redis/redis.module';
 import { MailerModule } from './mailer/mailer.module';
 import { ProfileModule } from './profile/profile.module';
+import { DsrModule } from './dsr/dsr.module';
 
 @Module({
   imports: [ConfigModule.forRoot({ isGlobal: true }),
@@ -15,7 +16,7 @@ import { ProfileModule } from './profile/profile.module';
     RedisModule,
     MailerModule,
     ProfileModule,
-    
+    DsrModule,
   ],
   controllers: [AppController],
   providers: [AppService],

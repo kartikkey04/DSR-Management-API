@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from '../users/user.model';
 import { JwtStrategy } from './jwt.strategy';
@@ -10,6 +10,7 @@ import { MailerModule } from 'src/mailer/mailer.module';
 
 @Module({
   imports: [
+    ConfigModule,
     SequelizeModule.forFeature([User]),
     MailerModule,
     JwtModule.registerAsync({
@@ -22,6 +23,8 @@ import { MailerModule } from 'src/mailer/mailer.module';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService],
+  exports: [AuthService]
 })
-export class AuthModule {}
+export class AuthModule {
+}

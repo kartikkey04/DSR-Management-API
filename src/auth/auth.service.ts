@@ -11,7 +11,7 @@ export class AuthService {
  
   constructor(
     @InjectModel(User) private userModel: typeof User,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signup(signupDto: SignupDto) {
@@ -30,8 +30,8 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(loginDto.password, user.password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
-
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
+ 
+    const token = await this.jwtService.sign({ sub: user.id, email: user.email });
     return { access_token: token };
   }
 
